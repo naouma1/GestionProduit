@@ -4,11 +4,11 @@
         <ul>
           <li><router-link to="/">Accueil</router-link></li>
           <li><router-link to="/produit">Produits</router-link></li>
-          <li><router-link to="/login">Connexion</router-link></li>
-          <li><router-link to="/register">Inscription</router-link></li>
+          <li v-if="!isLoggedIn"><router-link to="/login">Connexion</router-link></li>
+          <li v-if="!isLoggedIn"><router-link to="/register">Inscription</router-link></li>
           <!-- Afficher le lien de déconnexion uniquement si l'utilisateur est connecté -->
-          <li v-if="isLoggedIn"><a @click="logout">Déconnexion</a></li>
-          <li v-if="isLoggedIn"><a @click="logout">Mes Commandes</a></li>
+          <li v-if="isLoggedIn"><router-link to="/logout">Déconnexion</router-link></li>
+          <li v-if="isLoggedIn"><router-link to="/commande">Mes Commandes</router-link></li>
         </ul>
       </nav>
     </header>
