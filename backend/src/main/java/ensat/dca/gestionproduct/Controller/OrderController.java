@@ -1,3 +1,4 @@
+
 package ensat.dca.gestionproduct.Controller;
 
 import ensat.dca.gestionproduct.Entity.Orders;
@@ -6,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -18,12 +20,9 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
-        // Vérifiez que productId et userId ne sont pas nulls
         if (orderRequest.getProductId() == null || orderRequest.getUserId() == null) {
             return ResponseEntity.badRequest().body("Le productId et le userId doivent être non nuls");
         }
-
-        // Créez la commande avec les informations reçues
         try {
             Orders order = orderService.createOrder(orderRequest.getProductId(), orderRequest.getQuantity(), orderRequest.getUserId());
             return ResponseEntity.ok("Commande créée avec succès");
@@ -34,15 +33,15 @@ public class OrderController {
     }
 
 
-    @GetMapping("/getall")
-    public ResponseEntity<List<Orders>> getAllOrders() {
-        try {
-            List<Orders> orders = orderService.getAll();
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Orders>> getOrdersByUserId(@PathVariable Long userId) {
+        List<Orders> orders = orderService.getOrdersByUserId(userId);
+
+        return ResponseEntity.ok(orders);}
+
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {

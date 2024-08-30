@@ -30,10 +30,6 @@ public class Orders {
     @Column(name = "date_commande", nullable = false)
     private LocalDateTime dateCommande;
 
-    @Column(name = "status", nullable = false)
-    private String status;
-
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user; // Assurez-vous que l'entité User est définie

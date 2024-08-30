@@ -25,50 +25,61 @@ public class OrderService {
     private UserRepository userRepository;
 
 
+
     public Orders createOrder(Long productId, Integer quantity, Long userId) throws Exception {
-        if (productId == null || userId == null) {
-            throw new IllegalArgumentException("Le productId et le userId doivent être non nuls");
-        }
-
-        Products product = productRepository.findById(productId)
-                .orElseThrow(() -> new Exception("Produit non trouvé"));
-
-        if (product.getQuantity() < quantity) {
-            throw new Exception("Quantité insuffisante en stock");
-        }
 
         Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new Exception("Utilisateur non trouvé"));
+                .orElseThrow(() -> {
+                    return new Exception("Utilisateur non trouvé");
+                });
 
-        // Vérifiez si l'utilisateur est un client
-        if (!user.getType().equals("client")) {
-            throw new Exception("Vous devez être un client pour passer une commande");
+        System.out.println("Recherche du produit avec ID: " + productId);
+        Products product = productRepository.findById(productId)
+                .orElseThrow(() -> {
+                    System.out.println("Produit non trouvé pour l'ID: " + productId);//Debug
+                    return new Exception("Produit non trouvé");
+                });
+
+        System.out.println("Produit trouvé: " + product);
+
+        if (quantity == null || quantity <= 0) {
+            throw new IllegalArgumentException("La quantité doit être supérieure à 0");
+        }
+
+        if (quantity > product.getQuantity()) {
+            throw new IllegalArgumentException("La quantité demandée dépasse la quantité en stock");
         }
 
         Orders order = new Orders();
         order.setProduct(product);
         order.setQuantity(quantity);
         order.setDateCommande(LocalDateTime.now());
-        order.setStatus("En cours");
-        order.setUser(user); // Lien avec l'utilisateur
+        order.setUser(user);
 
-        // Mise à jour de la quantité du produit
-        product.setQuantity(product.getQuantity() - quantity);
+        int updatedQuantity = product.getQuantity() - quantity;
+        if (updatedQuantity < 0) {
+            throw new IllegalArgumentException("La quantité demandée dépasse la quantité en stock");
+        }
+        product.setQuantity(updatedQuantity);
         productRepository.save(product);
 
-        return orderRepository.save(order);
+        // Sauvegarder la commande
+        Orders savedOrder = orderRepository.save(order);
+
+        System.out.println("Commande créée avec succès: " + savedOrder);
+
+        return savedOrder;
     }
 
 
-    public List<Orders> getAll() {
-        return orderRepository.findAll();
+    public List<Orders> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 
     public void deleteOrder(Long id) throws Exception {
         Orders order = orderRepository.findById(id)
-                .orElseThrow(() -> new Exception("Commande non trouvée"));
+                .orElseThrow(() -> new Exception("Commande introuvable"));
 
-        // Mise à jour de la quantité du produit lors de la suppression de la commande
         Products product = order.getProduct();
         product.setQuantity(product.getQuantity() + order.getQuantity());
         productRepository.save(product);

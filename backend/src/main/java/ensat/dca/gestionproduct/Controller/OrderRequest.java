@@ -1,13 +1,15 @@
 package ensat.dca.gestionproduct.Controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ensat.dca.gestionproduct.Entity.Users;
+import jakarta.persistence.Id;
 
 public class OrderRequest {
     @JsonProperty("productId")
     private Long productId;
 
     @JsonProperty("quantity")
-    private int quantity;
+    private Integer quantity;
 
     @JsonProperty("userId")
     private Long userId;
@@ -21,7 +23,7 @@ public class OrderRequest {
         this.productId = productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -36,4 +38,5 @@ public class OrderRequest {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
 }

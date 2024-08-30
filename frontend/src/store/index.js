@@ -1,21 +1,31 @@
 import { createStore } from 'vuex';
 
-export default createStore({
+const store = createStore({
   state: {
-    isLoggedIn: false,
-    user: {
+    isLoggedIn: !!localStorage.getItem('user'),
+    user: JSON.parse(localStorage.getItem('user')) || {
       id: null,
-      role: '' // Assurez-vous que le rôle de l'utilisateur est stocké ici
-    }
+      role: ''
+    },
+    orders: [],
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
       state.isLoggedIn = true;
+      localStorage.setItem('user', JSON.stringify(user));
     },
     logout(state) {
       state.user = { id: null, role: '' };
       state.isLoggedIn = false;
+      localStorage.removeItem('user');
+    },
+    deleteOrder(state, orderId) {
+      state.orders = state.orders.filter(order => order.id !== orderId);
+    },
+    setOrders(state, orders){
+      state.orders = orders;
+
     }
   },
   actions: {
@@ -24,6 +34,12 @@ export default createStore({
     },
     logout({ commit }) {
       commit('logout');
+    },
+    delete({ commit }, orderId){
+      commit ('deleteOrder',orderId)
     }
   }
 });
+  
+
+export default store;

@@ -24,10 +24,17 @@ public class UserService {
 
     public Users createUser(Users user) throws Exception {
         // Vérifier si l'utilisateur a rempli tous les champs requis
-        if (user.isEmpty()) {
-            throw new Exception("Les informations de l'utilisateur ne peuvent pas être vides");
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new Exception("Le nom d'utilisateur ne peut pas être vide");
+        }
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new Exception("L'email ne peut pas être vide");
+        }
+        if (user.getPhone() == null || user.getPhone().trim().isEmpty()) {
+            throw new Exception("Le numéro de téléphone ne peut pas être vide");
         }
 
+        // Vérification des doublons
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new Exception("Nom d'utilisateur déjà utilisé");
         }
@@ -42,6 +49,7 @@ public class UserService {
     }
 
 
+
     public Optional<Users> login(String username, String password) {
         Optional<Users> userExist = userRepository.findByUsername(username);
 
@@ -54,8 +62,7 @@ public class UserService {
         return Optional.empty();
     }
     public void logout() {
-        // Vous pouvez ajouter ici une logique de déconnexion spécifique si nécessaire
-        // Par exemple, invalider des tokens ou des sessions si vous utilisez des sessions côté serveur
+
     }
 
     public Optional<Users> findByUsername(String username) {

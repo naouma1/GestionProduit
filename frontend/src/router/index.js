@@ -4,7 +4,7 @@ import LoginPage from '@/views/LoginPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
 import ProduitPage from '@/views/ProduitPage.vue';
 import LogoutPage from '@/views/LogoutPage.vue';
-//import CommandePage from '@/views/CommandePage.vue';
+import CommandePage from '@/views/CommandePage.vue';
 
 
 const routes = [
@@ -12,7 +12,7 @@ const routes = [
   { path: '/login', component: LoginPage },
   { path: '/register', component: RegisterPage },
   { path: '/produit', component: ProduitPage },
-  //{ path: '/commande', component: CommandePage}
+  { path: '/commande', component: CommandePage},
   { path: '/logout', component: LogoutPage },
 
 ];

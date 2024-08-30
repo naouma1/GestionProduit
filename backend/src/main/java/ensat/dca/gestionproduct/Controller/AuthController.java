@@ -27,9 +27,17 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Users user) {
         try {
-            if (user.isEmpty()) {
-                return ResponseEntity.badRequest().body("Les informations de l'utilisateur sont incomplètes");
+            // Vérifier si l'utilisateur a rempli tous les champs requis
+            if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Le nom d'utilisateur ne peut pas être vide");
             }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("L'email ne peut pas être vide");
+            }
+            if (user.getPhone() == null || user.getPhone().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Le numéro de téléphone ne peut pas être vide");
+            }
+
             Users newUser = userService.createUser(user);
             return ResponseEntity.ok(newUser);
         } catch (Exception e) {
