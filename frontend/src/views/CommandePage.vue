@@ -7,7 +7,8 @@
         <p><strong>Nom :</strong> {{ order.product.name ? order.product.name : 'Inconnu' }}</p>
         <p><strong>Prix :</strong> {{ formatPrice(order.product.price) }}</p>
         <p><strong>Description :</strong> {{ order.product.description ? order.product.description : 'Non spécifié' }}</p>
-        <p><strong>Quantité :</strong> {{ order.product.quantity !== undefined && order.product.quantity !== null ? order.product.quantity : '0' }}</p>
+        <p><strong>Quantité :</strong> {{ order.quantity !== undefined && order.quantity !== null ? order.quantity : '0' }}</p>
+        <p><strong>Date et Heure de la Commande :</strong> {{ formatDate(order.dateCommande) }}</p> <!-- Affichage de la date et heure -->
         <button @click="deleteOrder(order.id)">Supprimer</button>
       </div>
     </div>
@@ -42,6 +43,7 @@ export default {
       try {
         const response = await axios.get(`http://localhost:8080/orders/user/${this.userId}`);
         this.orders = response.data;
+        console.log('Données des commandes:', this.orders); // Vérifiez les données reçues ici
       } catch (error) {
         console.error('Erreur lors de la récupération des commandes:', error);
       }
@@ -56,7 +58,22 @@ export default {
     },
     formatPrice(price) {
       return price !== undefined && price !== null ? price.toFixed(2) + ' €' : 'N/A';
-    }
+    },
+    formatDate(date) {
+      if (!date) return 'Non spécifié';
+
+      try {
+        const dateObj = new Date(date); // Crée un objet Date à partir de la chaîne ISO
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+
+        // Concatène la date et l'heure formatées
+        return dateObj.toLocaleDateString('fr-FR', dateOptions) + ' ' + dateObj.toLocaleTimeString('fr-FR', timeOptions);
+      } catch (error) {
+        console.error('Erreur lors du formatage de la date:', error);
+        return 'Date invalide';
+      }
+    },
   },
 };
 </script>
