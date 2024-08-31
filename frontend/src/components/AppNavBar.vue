@@ -1,58 +1,80 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <header>
+    <nav>
+      <ul>
+        <li><router-link to="/">Accueil</router-link></li>
+        <li v-if="isLoggedIn"><router-link to="/produit">Produits</router-link></li>
+        <li v-if="isLoggedIn"><router-link to="/commande">Mes Commandes</router-link></li>
+        <li v-if="isLoggedIn"><router-link to="/logout">Déconnexion</router-link></li>
+        <li v-if="!isLoggedIn"><router-link to="/login">Connexion</router-link></li>
+        <li v-if="!isLoggedIn"><router-link to="/register">Inscription</router-link></li>
+      </ul>
+    </nav>
+  </header>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  computed: {
+    // Vérifie si l'utilisateur est connecté en regardant le localStorage
+    isLoggedIn() {
+      return !!localStorage.getItem('user'); 
+    }
+  },
+  methods: {
+    // Méthode pour déconnecter l'utilisateur
+    logout() {
+      localStorage.removeItem('user'); // Supprime les informations de connexion
+      this.$router.push('/login'); // Redirige vers la page de connexion
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+header {
+  background: linear-gradient(145deg, #6d4c41, #8d6e63); /* Dégradé bois */
+  color: #fff;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-ul {
-  list-style-type: none;
+
+nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
   padding: 0;
+  align-items: center; /* Alignement vertical au centre */
+  justify-content: center; /* Centre les éléments horizontalement */
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+nav li {
+  margin: 0 20px; /* Espacement horizontal entre les éléments */
 }
-a {
-  color: #42b983;
+
+nav a, button {
+  color: #fff; /* Couleur du texte des liens et boutons */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+nav a:hover, button:hover {
+  color: #6d4c41; /* Couleur bois foncé pour le texte au survol */
+  background-color: #d2b48c; /* Couleur bois clair pour le fond au survol */
+}
+
+button {
+  background-color: transparent;
+  border: 1px solid #fff; /* Bordure blanche pour le bouton */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d2b48c; /* Couleur bois clair pour le bouton au survol */
+  color: #6d4c41; /* Couleur bois foncé pour le texte du bouton au survol */
 }
 </style>

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import AppHeader from './components/AppHeader.vue';
+import AppHeader from './components/AppNavBar.vue';
 import AppFooter from './components/AppFooter.vue';
 
 export default {

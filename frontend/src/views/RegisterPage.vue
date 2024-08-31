@@ -18,14 +18,6 @@
         <label for="password">Mot de passe</label>
         <input v-model="password" type="password" id="password" required />
       </div>
-      <div class="form-group">
-        <label for="type">Type d'utilisateur</label>
-        <select v-model="type" id="type" required>
-          <option value="">Sélectionner un type</option>
-          <option value="CLIENT">Client</option>
-          <option value="VENDEUR">Vendeur</option>
-        </select>
-      </div>
       <button type="submit" class="btn">S'inscrire</button>
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </form>
@@ -42,32 +34,27 @@ export default {
       email: '',
       phone: '',
       password: '',
-      type: '', // Type d'utilisateur (CLIENT ou VENDEUR)
       errorMessage: '',
     };
   },
   methods: {
     async registerUser() {
       try {
-        // Vérification si le type d'utilisateur est sélectionné
-        if (!this.type) {
-          this.errorMessage = "Veuillez sélectionner un type d'utilisateur.";
-          return;
-        }
-
-        // Requête d'inscription
         await axios.post('http://localhost:8080/users/register', {
           username: this.username,
           email: this.email,
           phone: this.phone,
           password: this.password,
-          type: this.type, // Envoi du type d'utilisateur au backend
         });
 
         alert('Inscription réussie !');
         this.$router.push('/login');
       } catch (error) {
-        this.errorMessage = 'Une erreur s\'est produite lors de l\'inscription.';
+        if (error.response && error.response.data && error.response.data.message) {
+          this.errorMessage = error.response.data.message;
+        } else {
+          this.errorMessage = 'Une erreur s\'est produite lors de l\'inscription.';
+        }
         console.error(error);
       }
     },
@@ -77,59 +64,84 @@ export default {
 
 <style scoped>
 .register {
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: #f4f1f0;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   margin-top: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.register::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, #8d6e63, transparent);
+  border-radius: 50%;
+  opacity: 0.15;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  color: #6d4c41;
+  font-family: 'Roboto', sans-serif;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #6d4c41;
 }
 
-input, select {
+input {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  border-color: #8d6e63;
+  box-shadow: 0 0 8px rgba(141, 110, 99, 0.3);
+  outline: none;
 }
 
 .btn {
   display: block;
   width: 100%;
-  background-color: #ff6f61;
+  background: #6d4c41;
   color: #fff;
-  padding: 10px;
+  padding: 14px;
   border: none;
-  border-radius: 4px;
-  font-size: 1em;
+  border-radius: 8px;
+  font-size: 1.1em;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn:hover {
-  background-color: #ff3d3d;
+  background: #4e3b2e;
+  transform: scale(1.05);
 }
 
 .error {
-  color: red;
+  color: #e74c3c;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 15px;
+  font-size: 0.9em;
 }
 </style>
-
-  
