@@ -8,7 +8,10 @@
         <p><strong>Prix :</strong> {{ formatPrice(order.product.price) }}</p>
         <p><strong>Description :</strong> {{ order.product.description ? order.product.description : 'Non spécifié' }}</p>
         <p><strong>Quantité :</strong> {{ order.quantity !== undefined && order.quantity !== null ? order.quantity : '0' }}</p>
-        <p><strong>Date et Heure de la Commande :</strong> {{ formatDate(order.dateCommande) }}</p> <!-- Affichage de la date et heure -->
+        <p><strong>Date et Heure de la Commande :</strong> {{ formatDate(order.dateCommande) }}</p>
+        <div v-if="order.product.imageFileName">
+          <img :src="`http://localhost:8080/images/${order.product.imageFileName}`" alt="Image du produit" class="product-image"/>
+        </div>
         <button @click="deleteOrder(order.id)">Supprimer</button>
       </div>
     </div>
@@ -90,5 +93,12 @@ export default {
 
 .order-item p {
   margin: 5px 0;
+}
+
+.product-image {
+  max-width: 100px;
+  height: auto;
+  display: block;
+  margin-top: 10px;
 }
 </style>

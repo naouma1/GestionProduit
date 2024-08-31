@@ -61,10 +61,5 @@ public class ProductService {
     public Products saveProduct(Products product) {
         return productRepository.save(product);
     }
-
-
-
-
-    // Utilisez la liste de produits comme nécessaire
 }
 

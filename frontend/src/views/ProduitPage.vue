@@ -23,14 +23,15 @@
           <span v-else class="placeholder">Stock épuisé</span>
         </p>
         <div v-if="product.imageUrl">
-          <img :src="product.imageUrl" alt="Image du produit" class="product-image"/>
+          <img :src="'http://localhost:8080/images/' + product.imageFileName" alt="Image du produit" class="product-image"/>
+
         </div>
         <button 
           @click="addOrder(product.id)" 
           :disabled="!product.selectedQuantity || product.selectedQuantity < 1 || product.selectedQuantity > product.quantity"
           :class="{ 'out-of-stock': product.quantity <= 0 }"
         >
-          {{ product.quantity > 0 ? 'Commander' : 'Stock Epuisé' }}
+          {{ product.quantity > 0 ? 'Commander' : 'Stock Épuisé' }}
         </button>
       </div>
     </div>
@@ -39,6 +40,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';

@@ -22,7 +22,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+
     private final String uploadDir = "src/main/resources/static/images/"; // Répertoire de stockage des images
+    private final String imageUrlPrefix = "/images/"; // URL pour accéder aux images
 
     @PostMapping("/add")
     public ResponseEntity<Products> createProduct(@RequestBody Products product) throws Exception {
@@ -34,10 +36,14 @@ public class ProductController {
     public ResponseEntity<List<Products>> getAllProducts() {
         List<Products> products = productService.getAllProducts();
 
-        // Ajouter l'URL de l'image à chaque produit
-        products.forEach(product ->
-                product.setImageUrl("/images/" + product.getImageFileName())
-        );
+        // Vérifiez et ajoutez l'URL de l'image pour chaque produit
+        products.forEach(product -> {
+            if (product.getImageFileName() != null && !product.getImageFileName().isEmpty()) {
+                product.setImageUrl(imageUrlPrefix + product.getImageFileName());
+            } else {
+                product.setImageUrl(null); // ou ajoutez une URL d'image par défaut
+            }
+        });
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
